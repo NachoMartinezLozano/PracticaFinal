@@ -1,13 +1,20 @@
 <script setup>
-    import { ref } from 'vue'
+    import { ref, onMounted, onUnmounted } from 'vue'
     const nombreEmpresa = 'CyberPulse Labs'
 
     const showBoton = ref(window.innerWidth < 768)
-    /*
+    
     const updateBotonVisibility = () => {
-        showBoton.value = window.innerWidth >= 768
+        showBoton.value = window.innerWidth < 768
     }
-    */
+    
+    onMounted(() => {
+        window.addEventListener('resize', updateBotonVisibility)
+    })
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', updateBotonVisibility)
+    })
 
 </script>
 
