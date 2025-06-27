@@ -1,0 +1,1 @@
+<!--  Clase para el navegador lateral de la aplicación -->
