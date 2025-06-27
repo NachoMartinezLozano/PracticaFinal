@@ -2,6 +2,40 @@
     import { ref, onMounted, onUnmounted } from 'vue'
     const nombreEmpresa = 'CyberPulse Labs'
 
+     // Variable para controlar el cambio de tema
+    const theme = ref(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+
+    // Aplicar el tema al cargar la página
+    const applyTheme = () => {
+        document.documentElement.setAttribute('data-theme', theme.value)
+        localStorage.setItem('theme', theme.value)
+    }
+    
+    // Cambiar el tema al hacer clic sobre el toggle de cambio de modo
+    const toggleTheme = () => {
+        theme.value = theme.value === 'light' ? 'dark' : 'light'
+        applyTheme()
+    }
+
+    // Escuchar cambios en la preferencia del sistema
+    const handleSystemThemeChange = (e) => {
+        if (!localStorage.getItem('theme')) {
+            theme.value = e.matches ? 'dark' : 'light'
+            applyTheme()
+        }
+    }
+
+    // Inicializar el tema y configurar el listener
+    onMounted(() => {
+        applyTheme()
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange)
+    })
+
+    // Limpiar el listener al desmontar el componente
+    onUnmounted(() => {
+        window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', handleSystemThemeChange)
+    })
+
     const showBoton = ref(window.innerWidth < 768)
     
     const updateBotonVisibility = () => {
@@ -42,7 +76,7 @@
                 <li>
                     <label class="swap swap-rotate">
                     <!-- this hidden checkbox controls the state -->
-                    <input type="checkbox" />
+                    <input type="checkbox" :checked="theme === 'light'" @change="toggleTheme" />
 
                     <!-- sun icon -->
                     <svg
