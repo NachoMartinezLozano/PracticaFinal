@@ -65,9 +65,9 @@
             <ul
                 tabindex="0"
                 class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                <li><a>Operaciones</a></li>
-                <li><a>Equipos</a></li>
-                <li><a>Agentes</a></li>
+                <li><button class="btn" @click="router.push({ path: '/operaciones'})">Operaciones</button></li>
+                <li><button class="btn" @click="router.push({ path: '/equipos'})">Equipos</button></li>
+                <li><button class="btn" @click="router.push({ path: '/agentes'})">Agentes</button></li>
             </ul>
         </div>
         <div class="flex-1 px-5">
