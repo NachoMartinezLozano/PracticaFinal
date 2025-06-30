@@ -1,5 +1,8 @@
 <script setup>
     import { ref, onMounted, onUnmounted } from 'vue'
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
     const nombreEmpresa = 'CyberPulse Labs'
 
      // Variable para controlar el cambio de tema
@@ -68,7 +71,7 @@
             </ul>
         </div>
         <div class="flex-1 px-5">
-            <a class="btn btn-ghost text-xl">{{ nombreEmpresa }}</a>
+            <button class="btn btn-ghost text-xl" @click="router.push({ path: '/'})">{{ nombreEmpresa }}</button>
         </div>
         <div class="flex">
             <ul class="menu menu-horizontal px-1">
