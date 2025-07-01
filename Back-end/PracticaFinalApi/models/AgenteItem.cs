@@ -7,5 +7,6 @@ namespace PracticaFinalApi.Models
         public string? Rango { get; set; }
         public bool Activo { get; set; }
         public int EquipoId { get; set; } // Relación con el usuario que realizó la operación
+        public virtual EquipoItem? Equipo { get; set; } // Relación con el equipo al que pertenece el agente
     }
 }
