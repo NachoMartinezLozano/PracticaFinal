@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -22,96 +23,96 @@ namespace PracticaFinalApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OperacionItem>>> GetOperaciones()
         {
-            try
-            {
-                var operaciones = await _context.Operaciones
-                    .Include(o => o.Equipos) // Incluye los equipos relacionados con la operación
-                    .ToListAsync();
-                return Ok(operaciones);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al obtener las operaciones: {ex.Message}");
-            }
+
+            return await _context.Operaciones
+                .Include(o => o.Equipos) // Incluye los equipos relacionados con la operación
+                .ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<OperacionItem>> GetOperacion(int id)
         {
-            try
+            var operacion = await _context.Operaciones.FindAsync(id);
+            if (operacion == null)
             {
-                var operacion = await _context.Operaciones
-                    .Include(o => o.Equipos) // Incluye los equipos relacionados con la operación
-                    .FirstOrDefaultAsync(o => o.Id == id);
-
-                if (operacion == null)
-                {
-                    return NotFound($"Operación con ID {id} no encontrada.");
-                }
-
-                return Ok(operacion);
+                return NotFound($"Operación con ID {id} no encontrada.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al obtener la operación: {ex.Message}");
-            }
+
+            return operacion;
         }
 
         [HttpPost]
-        public async Task<ActionResult<OperacionItem>> PostOperacion(OperacionItem operacion)
+        public async Task<ActionResult<IEnumerable<OperacionItem>>> PostOperacion(OperacionItem operacion)
         {
-            try
+            if (operacion == null)
             {
-                if (operacion == null)
-                {
-                    return BadRequest("Operación no puede ser nula.");
-                }
-
-                _context.Operaciones.Add(operacion);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetOperacion), new { id = operacion.Id }, operacion);
+                return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
             }
-            catch (Exception ex)
+
+            var op = new OperacionItem
             {
-                return StatusCode(500, $"Error al crear la operación: {ex.Message}");
-            }
+                Nombre = operacion.Nombre,
+                Estado = operacion.Estado,
+                FechaInicio = operacion.FechaInicio,
+                FechaFinal = operacion.FechaFinal,
+                Equipos = operacion.Equipos
+            };
+
+            _context.Operaciones.Add(op);
+            await _context.SaveChangesAsync();
+
+            return await GetOperaciones();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOperacion(int id, [FromBody] OperacionItem operacion)
+        public async Task<ActionResult<IEnumerable<OperacionItem>>> PutOperacion(int id, OperacionItem operacion)
         {
+            if (id != operacion.Id)
+            {
+                return BadRequest("El ID de la operación no coincide con el ID proporcionado en la URL.");
+            }
+
+            var op = await _context.Operaciones.FindAsync(id);
+            if (op == null)
+            {
+                return NotFound($"Operación con ID {id} no encontrada.");
+            }
+
+            op.Id = operacion.Id;
+            op.Nombre = operacion.Nombre;
+            op.Estado = operacion.Estado;
+            op.FechaInicio = operacion.FechaInicio;
+            op.FechaFinal = operacion.FechaFinal;
+
             try
             {
-                if (id != operacion.Id)
-                {
-                    return BadRequest("El ID de la operación en la URL no coincide con el ID del cuerpo de la solicitud.");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var existingOperacion = await _context.Operaciones.FindAsync(id);
-                if (existingOperacion == null)
-                {
-                    return NotFound($"No se encontró la operación con ID {id}.");
-                }
-
-                existingOperacion.Nombre = operacion.Nombre;
-                existingOperacion.Estado = operacion.Estado;
-                existingOperacion.FechaInicio = operacion.FechaInicio;
-                existingOperacion.FechaFinal = operacion.FechaFinal;
-
                 await _context.SaveChangesAsync();
-
-                return NoContent();
             }
-            catch (Exception ex)
+            catch (DbUpdateConcurrencyException) when (!OperacionExists(id))
             {
-                return StatusCode(500, $"Error al actualizar la operación: {ex.Message}");
+                return NotFound($"Operación con ID {id} no encontrada.");
             }
+            return await GetOperaciones();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOperacion(int id)
+        {
+            var operacion = await _context.Operaciones.FindAsync(id);
+            if (operacion == null)
+            {
+                return NotFound();
+            }
+
+            _context.Operaciones.Remove(operacion);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
+        private bool OperacionExists(int id)
+        {
+            return _context.Operaciones.Any(e => e.Id == id);
         }
     }
 }

@@ -21,95 +21,92 @@ namespace PracticaFinalApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EquipoItem>>> GetEquipos()
         {
-            try
-            {
-                var equipos = await _context.Equipos
-                    .Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
-                    .Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
-                    .ToListAsync();
-                return Ok(equipos);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al obtener los equipos: {ex.Message}");
-            }
+           return await _context.Equipos
+                .Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
+                .Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
+                .ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<EquipoItem>> GetEquipo(int id)
         {
-            try
-            {
-                var equipo = await _context.Equipos
-                    .Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
-                    .Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
-                    .FirstOrDefaultAsync(e => e.Id == id);
-
-                if (equipo == null)
-                {
-                    return NotFound($"Equipo con ID {id} no encontrado.");
-                }
-
-                return Ok(equipo);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al obtener el equipo: {ex.Message}");
-            }
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<EquipoItem>> PostEquipo(EquipoItem equipo)
-        {
-            try
-            {
-                if (equipo == null)
-                {
-                    return BadRequest("El equipo no puede ser nulo.");
-                }
-
-                _context.Equipos.Add(equipo);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetEquipo), new { id = equipo.Id }, equipo);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al crear el equipo: {ex.Message}");
-            }
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEquipo(int id, EquipoItem equipo)
-        {
-            if (id != equipo.Id)
-            {
-                return BadRequest("El ID del equipo no coincide con el ID proporcionado.");
-            }
-
-            var existingEquipo = await _context.Equipos.FindAsync(id);
-            if (existingEquipo == null)
+            var equipo = await _context.Equipos.FindAsync(id);
+            if (equipo == null)
             {
                 return NotFound($"Equipo con ID {id} no encontrado.");
             }
 
+            return equipo;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<EquipoItem>>> PostEquipo(EquipoItem equipo)
+        {
+            if (equipo == null)
+            {
+                return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+            }
+
+            var newEquipo = new EquipoItem
+            {
+                Nombre = equipo.Nombre,
+                Especialidad = equipo.Especialidad,
+                OperacionId = equipo.OperacionId,
+                Agentes = equipo.Agentes,
+                Operacion = equipo.Operacion
+            };
+
+            _context.Equipos.Add(newEquipo);
+            await _context.SaveChangesAsync();
+
+            return await GetEquipos();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<IEnumerable<EquipoItem>>> PutEquipo(int id, EquipoItem equipo)
+        {
+            if (id != equipo.Id)
+            {
+                return BadRequest("El ID del equipo no coincide con el ID en la URL.");
+            }
+
+            var newEquipo = await _context.Equipos.FindAsync(id);
+            if (newEquipo == null)
+            {
+                return NotFound();
+            }
+
+            newEquipo.Id = equipo.Id;
+            newEquipo.Nombre = equipo.Nombre;
+            newEquipo.Especialidad = equipo.Especialidad;
+            newEquipo.OperacionId = equipo.OperacionId;
+            newEquipo.Operacion = equipo.Operacion;
+            newEquipo.Agentes = equipo.Agentes;
+
             try
             {
-                existingEquipo.Nombre = equipo.Nombre;
-                existingEquipo.Especialidad = equipo.Especialidad;
-                existingEquipo.OperacionId = equipo.OperacionId;
-                existingEquipo.Agentes = equipo.Agentes;
-                existingEquipo.Operacion = equipo.Operacion;
-
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!EquipoExists(id))
             {
-                if (!EquipoExists(id))
-                {
-                    return NotFound($"Equipo con ID {id} no encontrado.");
-                }
+                return NotFound();
             }
+
+            return await GetEquipos();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEquipo(int id)
+        {
+            var equipo = await _context.Equipos.FindAsync(id);
+            if (equipo == null)
+            {
+                return NotFound();
+            }
+
+            _context.Equipos.Remove(equipo);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
