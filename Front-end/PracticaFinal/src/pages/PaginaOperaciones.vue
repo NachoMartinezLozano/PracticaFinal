@@ -3,6 +3,7 @@
     import Cabecera from '../components/Cabecera.vue'
     import Navegador from '../components/Navegador.vue'
     import { useVisibilidadNavegador } from '../composables/useVisibilidadNavegador'
+    import ContenedorOperaciones from '../components/ContenedorOperaciones.vue'
 
     const { showNavegador } = useVisibilidadNavegador()
 
@@ -15,7 +16,7 @@
         <div class="flex flex-row">
             <Navegador v-if="showNavegador" />
             <main :class="['flex-1 p-4', showNavegador ? 'ml-45' : 'ml-0']">
-                <h1>Bienvenido a tu gestor de Operaciones!</h1>
+                <ContenedorOperaciones></ContenedorOperaciones>
             </main>
             
         </div>

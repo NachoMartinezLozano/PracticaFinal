@@ -3,7 +3,7 @@
     import Cabecera from '../components/Cabecera.vue'
     import Navegador from '../components/Navegador.vue'
     import { useVisibilidadNavegador } from '../composables/useVisibilidadNavegador'
-    //import ContenedorPaginaPrincipal from '../components/ContenedorPaginaPrincipal.vue'
+    import ContenedorPaginaPrincipal from '../components/ContenedorPaginaPrincipal.vue'
 
     const { showNavegador } = useVisibilidadNavegador()
 
@@ -15,7 +15,7 @@
         <div class="flex flex-row">
             <Navegador v-if="showNavegador" />
             <main :class="['flex-1 p-4', showNavegador ? 'ml-45' : 'ml-0']">
-                <h1>Bienvenido a tu gestor DataStorm!</h1>
+                <ContenedorPaginaPrincipal></ContenedorPaginaPrincipal>
             </main>
             
         </div>
