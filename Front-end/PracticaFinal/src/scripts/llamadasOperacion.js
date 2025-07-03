@@ -2,7 +2,11 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const apiURL = 'https://localhost:7154/api/Operacion'
 let id = 0
-export const newOperacion = ref('')
+export const newOperacion = ref({
+    nombre: '',
+    fechaInicio:'',
+    fechaFinal:''    
+})
 const editingOperacionId = ref(null)
 const editedOperacionName = ref('')
 
@@ -27,22 +31,23 @@ export async function fetchOperaciones(){
     }
 }
 
-export async function addOperacion(){
-    console.log('Función addOperacion ejecutada, newOperacion:', newOperacion.value)
-    if(!newOperacion.value.trim()){
+export async function addOperacion(operacion){
+    console.log('Función addOperacion ejecutada, newOperacion:', operacion)
+    if(!operacion.nombre.trim() || !operacion.fechaInicio.trim() || !operacion.fechaFinal.trim()){
         console.log('No se añadión operación: el input está vacío')
         return false;
     }
 
     const item = {
-        nombre: newOperacion.value.trim(),
-        estado: 'planificada',
-        fechaInicio: 'dd/mm/aaaa',
-        fechaFin: 'dd/mm/aaaa'
+        nombre: operacion.nombre.trim(),
+        estado: 'Planificada',
+        fechaInicio: operacion.fechaInicio.trim(),
+        fechaFinal: operacion.fechaFinal.trim()
     }
 
     try{
         console.log('Enviando solicitud POST a:', apiURL)
+        console.log('Cuerpo de la solicitud:', JSON.stringify(item))
         const response = await fetch(apiURL, {
             method: 'POST',
             headers: {
@@ -52,8 +57,8 @@ export async function addOperacion(){
             body: JSON.stringify(item)
         })
         console.log('Respuesta recibida:', response.status, response.statusText)
-        if(!response.ok) throw new Error('Error al añadir la operación')
-        newOperacion.value = ''
+        if(!response.ok) throw new Error('Error al añadir la operación: ${response.status} ${response.statusText} - ${errorText}')
+        newOperacion.value = {nombre:'', fechaInicio: '', fechaFinal:''}
         return true
     }catch(error){
         console.error('Error añadiendo operacion:', error)
