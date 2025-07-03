@@ -2,7 +2,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const apiURL = 'https://localhost:7154/api/Operacion'
 let id = 0
-const newOperacion = ref('')
+export const newOperacion = ref('')
 const editingOperacionId = ref(null)
 const editedOperacionName = ref('')
 
@@ -30,8 +30,8 @@ export async function fetchOperaciones(){
 export async function addOperacion(){
     console.log('Función addOperacion ejecutada, newOperacion:', newOperacion.value)
     if(!newOperacion.value.trim()){
-        console.log('No se añadión equipo: el input está vacío')
-        return;
+        console.log('No se añadión operación: el input está vacío')
+        return false;
     }
 
     const item = {
@@ -54,8 +54,10 @@ export async function addOperacion(){
         console.log('Respuesta recibida:', response.status, response.statusText)
         if(!response.ok) throw new Error('Error al añadir la operación')
         newOperacion.value = ''
+        return true
     }catch(error){
         console.error('Error añadiendo operacion:', error)
+        return false
     }
 }
 

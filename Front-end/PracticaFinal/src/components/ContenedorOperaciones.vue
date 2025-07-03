@@ -16,6 +16,10 @@
         }
     }
 
+    const handleOperacionAdded = () => {
+        loadOperaciones();
+    }
+
     onMounted(loadOperaciones)
 
 </script>
@@ -25,7 +29,7 @@
     <div class="flex flex-col">
         <div class="flex flex-row justify-between">
             <h1>Gestiona todas las operaciones existentes dentro de la organización. </h1>
-            <BotonAñadirOperacion></BotonAñadirOperacion>
+            <BotonAñadirOperacion @operacion-added="handleOperacionAdded"></BotonAñadirOperacion>
         </div>
         <!-- Tabla con todas las operaciones -->
         <div >

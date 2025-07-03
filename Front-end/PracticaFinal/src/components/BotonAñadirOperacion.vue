@@ -1,6 +1,17 @@
 <script setup>
 
-    import { addOperacion } from '../scripts/llamadasOperacion.js'
+    import { addOperacion, newOperacion } from '../scripts/llamadasOperacion.js'
+    import { ref } from 'vue'
+
+    const emit = defineEmits(['operacion-added'])
+
+    const handleAddOperacion = async () => {
+        const success = await addOperacion();
+        if(success){
+            emit('operacion-added');
+            document.getElementById('my_modal_1').close();
+        }
+    }
 
 </script>
 
@@ -10,7 +21,7 @@
             <div class="modal-box">
                 <h3 class="text-lg font-bold">Introduce los datos de la nueva operación:</h3>
                     <div class="flex flex-col">
-                        <form @submit.prevent="addOperacion">
+                        <form @submit.prevent="handleAddOperacion">
                             <p>Nombre:</p>
                             <input 
                                 class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -18,7 +29,7 @@
                                 required
                                 placeholder="P.e: Operación A"
                             />
-                             <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
+                             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
                                 Añadir tarea
                             </button>
                         </form>
