@@ -8,9 +8,11 @@
     
     const loadOperaciones = async () => {
         try{
-            operaciones.value = await fetchOperaciones();
+            const data = await fetchOperaciones();
+            operaciones.value = data
         }catch(err){
             console.error('Error cargando operaciones en contenedor:', err)
+            operaciones.value = []
         }
     }
 
@@ -43,7 +45,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.estado }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaInicio }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaFin }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaFinal }}</td>
                     </tr>
                 </tbody>
             </table>

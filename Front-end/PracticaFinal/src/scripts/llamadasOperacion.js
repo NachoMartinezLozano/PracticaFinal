@@ -1,9 +1,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const apiURL = 'https://localhost:7154/api/operacion'
+const apiURL = 'https://localhost:7154/api/Operacion'
 let id = 0
 const newOperacion = ref('')
-const operaciones = ref([])
 const editingOperacionId = ref(null)
 const editedOperacionName = ref('')
 
@@ -19,11 +18,12 @@ export async function fetchOperaciones(){
 
         console.log('Respuesta recibida:', response.status, response.statusText)
         if(!response.ok) throw new Error('Error al obtener las Operaciones')
-        operaciones.value = await response.json()
-        console.log('Operaciones obtenidas:', operaciones.value)
+        const data = await response.json()
+        console.log('Operaciones obtenidas:', data)
+        return data
     } catch(error){
         console.error('Error fetching operaciones:', error)
-        operaciones.value = []
+        return []
     }
 }
 
