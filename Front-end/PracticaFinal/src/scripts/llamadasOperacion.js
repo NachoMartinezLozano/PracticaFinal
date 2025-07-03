@@ -37,8 +37,8 @@ export async function addOperacion(){
     const item = {
         nombre: newOperacion.value.trim(),
         estado: 'planificada',
-        fechaInicio: new Date().toISOString(),
-        fechaFin: new Date().toISOString()
+        fechaInicio: 'dd/mm/aaaa',
+        fechaFin: 'dd/mm/aaaa'
     }
 
     try{
