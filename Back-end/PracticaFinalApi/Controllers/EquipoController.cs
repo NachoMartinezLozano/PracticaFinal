@@ -22,8 +22,8 @@ namespace PracticaFinalApi.Controllers
         public async Task<ActionResult<IEnumerable<EquipoItem>>> GetEquipos()
         {
            return await _context.Equipos
-                .Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
-                .Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
+                //.Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
+                //.Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
                 .ToListAsync();
         }
 
@@ -52,8 +52,8 @@ namespace PracticaFinalApi.Controllers
                 Nombre = equipo.Nombre,
                 Especialidad = equipo.Especialidad,
                 OperacionId = equipo.OperacionId,
-                Agentes = equipo.Agentes,
-                Operacion = equipo.Operacion
+                //Agentes = equipo.Agentes,
+                //Operacion = equipo.Operacion
             };
 
             _context.Equipos.Add(newEquipo);
@@ -80,8 +80,8 @@ namespace PracticaFinalApi.Controllers
             newEquipo.Nombre = equipo.Nombre;
             newEquipo.Especialidad = equipo.Especialidad;
             newEquipo.OperacionId = equipo.OperacionId;
-            newEquipo.Operacion = equipo.Operacion;
-            newEquipo.Agentes = equipo.Agentes;
+            //newEquipo.Operacion = equipo.Operacion;
+            //newEquipo.Agentes = equipo.Agentes;
 
             try
             {

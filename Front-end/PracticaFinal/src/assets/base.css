@@ -20,8 +20,8 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 }
-
-/* semantic color variables for this project */
+/*
+/* semantic color variables for this project 
 :root {
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
@@ -69,7 +69,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  /*margin: 0;*/
+  /*margin: 0;
   font-weight: normal;
 }
 
@@ -99,3 +99,4 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+*/

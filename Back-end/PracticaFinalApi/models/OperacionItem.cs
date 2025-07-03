@@ -7,6 +7,6 @@ namespace PracticaFinalApi.Models
         public string? Estado { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinal { get; set; } 
-        public virtual List<EquipoItem>? Equipos { get; set; } // Relación con los equipos que pertenecen a la operación
+        //public virtual List<EquipoItem>? Equipos { get; set; } // Relación con los equipos que pertenecen a la operación
     }
 }

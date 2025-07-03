@@ -25,7 +25,7 @@ namespace PracticaFinalApi.Controllers
         {
 
             return await _context.Operaciones
-                .Include(o => o.Equipos) // Incluye los equipos relacionados con la operación
+                //.Include(o => o.Equipos) // Incluye los equipos relacionados con la operación
                 .ToListAsync();
         }
 
@@ -55,7 +55,7 @@ namespace PracticaFinalApi.Controllers
                 Estado = operacion.Estado,
                 FechaInicio = operacion.FechaInicio,
                 FechaFinal = operacion.FechaFinal,
-                Equipos = operacion.Equipos
+                //Equipos = operacion.Equipos
             };
 
             _context.Operaciones.Add(op);

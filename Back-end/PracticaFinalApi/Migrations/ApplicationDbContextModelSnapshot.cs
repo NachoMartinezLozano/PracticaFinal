@@ -37,8 +37,6 @@ namespace PracticaFinalApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EquipoId");
-
                     b.ToTable("Agentes");
                 });
 
@@ -58,8 +56,6 @@ namespace PracticaFinalApi.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OperacionId");
 
                     b.ToTable("Equipos");
                 });
@@ -85,38 +81,6 @@ namespace PracticaFinalApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Operaciones");
-                });
-
-            modelBuilder.Entity("PracticaFinalApi.Models.AgenteItem", b =>
-                {
-                    b.HasOne("PracticaFinalApi.Models.EquipoItem", "Equipo")
-                        .WithMany("Agentes")
-                        .HasForeignKey("EquipoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipo");
-                });
-
-            modelBuilder.Entity("PracticaFinalApi.Models.EquipoItem", b =>
-                {
-                    b.HasOne("PracticaFinalApi.Models.OperacionItem", "Operacion")
-                        .WithMany("Equipos")
-                        .HasForeignKey("OperacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Operacion");
-                });
-
-            modelBuilder.Entity("PracticaFinalApi.Models.EquipoItem", b =>
-                {
-                    b.Navigation("Agentes");
-                });
-
-            modelBuilder.Entity("PracticaFinalApi.Models.OperacionItem", b =>
-                {
-                    b.Navigation("Equipos");
                 });
 #pragma warning restore 612, 618
         }

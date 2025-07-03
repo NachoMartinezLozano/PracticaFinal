@@ -24,7 +24,7 @@ namespace PracticaFinalApi.Controllers
         public async Task<ActionResult<IEnumerable<AgenteItem>>> GetAgentes()
         {
             return await _context.Agentes
-                .Include(e => e.Equipo)
+                //.Include(e => e.Equipo)
                 .ToListAsync();
         }
 
@@ -53,7 +53,7 @@ namespace PracticaFinalApi.Controllers
                 Rango = agente.Rango,
                 Activo = agente.Activo,
                 EquipoId = agente.EquipoId,
-                Equipo = agente.Equipo
+                //Equipo = agente.Equipo
             };
 
             _context.Agentes.Add(ag);
@@ -81,7 +81,7 @@ namespace PracticaFinalApi.Controllers
             ag.Rango = agente.Rango;
             ag.Activo = agente.Activo;
             ag.EquipoId = agente.EquipoId;
-            ag.Equipo = agente.Equipo;
+            //ag.Equipo = agente.Equipo;
 
             try
             {
