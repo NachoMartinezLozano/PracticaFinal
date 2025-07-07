@@ -1,13 +1,12 @@
 <script setup>
 
-    import { addAgente, newAgente } from '../scripts/llamadasAgentes'
+    import { useAgentesStore } from '../stores/agentes'
 
-    const emit = defineEmits(['agente-added'])
+    const agentesStore = useAgentesStore()
 
     const handleAddAgente = async () => {
-        const success = await addAgente(newAgente.value);
+        const success = await agentesStore.addAgente();
         if(success){
-            emit('agente-added');
             document.getElementById('my_modal_3').close();
         }
     }
@@ -25,7 +24,7 @@
                         <p>Nombre:</p>
                         <input 
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newAgente.nombre"
+                            v-model="agentesStore.newAgente.nombre"
                             required
                             placeholder="P.e: Pepito Díaz"
                         />
@@ -34,7 +33,7 @@
                         <p>Rango:</p>
                         <input 
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newAgente.rango"
+                            v-model="agentesStore.newAgente.rango"
                             required
                             placeholder="P.e: Empleado, Gerente..."
                         />
@@ -43,19 +42,19 @@
                         <p>Activo:</p>
                         <select 
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newAgente.activo"
+                            v-model="agentesStore.newAgente.activo"
                             required
                         >
                             <option value="" disabled>Selecciona una opción</option>
-                            <option value="true">Sí</option>
-                            <option value="false">No</option>
+                            <option :value="true">Sí</option>
+                            <option :value="false">No</option>
                         </select>
                     </div>
                     <div class="mb-4">
                         <p>Equipo de trabajo:</p>
                         <input 
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newAgente.equipoId"
+                            v-model="agentesStore.newAgente.equipoId"
                             required
                             placeholder="P.e: 1,2..."
                         />

@@ -1,6 +1,6 @@
 <script setup>
 
-    import { updateAgente, removeAgente } from '../scripts/llamadasAgentes'
+    import { useAgentesStore } from '../stores/agentes'
     import { ref, watch } from 'vue'
 
     const props = defineProps({
@@ -10,7 +10,7 @@
         }
     })
 
-    const emit = defineEmits(['agente-updated', 'agente-deleted'])
+    const agentesStore = useAgentesStore()
     const editModal = ref(null)
 
     const localAgente = ref({
@@ -27,7 +27,7 @@
                 id: newValue.id ?? 0,
                 nombre: newValue.nombre || '',
                 rango: newValue.rango || '',
-                activo: newValue.activo ? 'true' : 'false',
+                activo: newValue.activo ?? false,
                 equipoId: newValue.equipoId ?? 0
             };
         } else {
@@ -36,7 +36,7 @@
                 id: 0,
                 nombre: '',
                 rango: '',
-                activo: 'false',
+                activo: false,
                 equipoId: 0
             };
         }
@@ -59,10 +59,9 @@
 
     const handleSaveAgente = async () => {
         try{
-            const success = await updateAgente(localAgente.value)
+            const success = await agentesStore.updateAgente(localAgente.value)
             if(success){
-                emit('agente-updated')
-                document.getElementById('edit_modal').close()
+                closeModal()
             }
         }catch(error){
             console.error('Error en handleSaveAgente: ', error)
@@ -73,10 +72,9 @@
         if(!confirm('¿Estás seguro de que quieres eliminar este agente?')) return
 
         try{
-            const success = await removeAgente(props.agente.id)
+            const success = await agentesStore.removeAgente(props.agente.id)
             if(success){
-                emit('agente-deleted')
-                document.getElementById('edit_modal').close()
+                closeModal()
             }
         }catch(error){
             console.error('Error eliminando agente: ', error)

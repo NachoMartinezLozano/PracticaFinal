@@ -1,5 +1,5 @@
 <script setup>
-    import { updateOperacion, removeOperacion } from '../scripts/llamadasOperacion'
+    import { useOperacionesStore } from '../stores/operaciones'
     import { ref, watch } from 'vue'
 
     const props = defineProps({
@@ -9,7 +9,7 @@
         }
     })
 
-    const emit = defineEmits(['operacion-updated', 'operacion-deleted'])
+    const operacionesStore = useOperacionesStore()
     const editModalOperacion = ref(null)
 
     const localOperacion = ref({
@@ -57,10 +57,9 @@
 
     const handleSaveOperacion = async () => {
         try{
-            const success = await updateOperacion(localOperacion.value)
+            const success = await operacionesStore.updateOperacion(localOperacion.value)
             if(success){
-                emit('operacion-updated')
-                document.getElementById('edit_modal_operacion').close()
+                closeModal()
             }
         }catch(error){
             console.error('Error en handleSaveOperacion: ', error)
@@ -71,10 +70,9 @@
         if(!confirm('¿Estás seguro de que quieres eliminar esta operación?')) return
 
         try{
-            const success = await removeOperacion(props.operacion.id)
+            const success = await operacionesStore.removeOperacion(props.operacion.id)
             if(success){
-                emit('operacion-deleted')
-                document.getElementById('edit_modal_operacion').close()
+                closeModal()
             }
         }catch(error){
             console.error('Error eliminando operación: ', error)

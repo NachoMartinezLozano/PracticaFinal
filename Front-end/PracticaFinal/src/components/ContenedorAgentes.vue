@@ -2,34 +2,14 @@
 
     import BotonAñadirAgentes from './BotonAñadirAgentes.vue'
     import BotonEditarEliminarAgente from './BotonEditarEliminarAgente.vue'
-    import { fetchAgentes } from '../scripts/llamadasAgentes'
-    import { ref, onMounted } from 'vue'
+    import { useAgentesStore } from '../stores/agentes'
+    import { onMounted } from 'vue'
 
-    const agentes = ref([])
+    const agentesStore = useAgentesStore()
 
-    const loadAgentes = async () => {
-        try{
-            const data = await fetchAgentes()
-            agentes.value = data
-        }catch(err){
-            console.error('Error cargando agentes en contenedor: ', err)
-            agentes.value = []
-        }
-    }
-
-    const handleAgenteAdded = () => {
-        loadAgentes(); // Recargar la lista cuando se añade un agente
-    }
-
-    const handleAgenteUpdated = () => {
-    loadAgentes(); // Recargar la lista cuando se actualiza un agente
-    };
-
-    const handleAgenteDeleted = () => {
-    loadAgentes(); // Recargar la lista cuando se elimina un agente
-    };
-
-    onMounted(loadAgentes)
+    onMounted(() => {
+        agentesStore.fetchAgentes();
+    })
 
 </script>
 
@@ -38,7 +18,7 @@
     <div class="flex flex-col">
         <div class="flex flex-row justify-between">
             <h1>Gestiona todos los agentes de la organización. </h1>
-            <BotonAñadirAgentes @agente-added="handleAgenteAdded"></BotonAñadirAgentes>
+            <BotonAñadirAgentes></BotonAñadirAgentes>
         </div>
         <!-- Tabla con todas las operaciones -->
         <div >
@@ -54,14 +34,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <tr v-for="agente in agentes" :key="agente.id">
+                    <tr v-for="agente in agentesStore.agentes" :key="agente.id">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.rango }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.activo ? 'Si' : 'No' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.equipoId }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                             <BotonEditarEliminarAgente :agente="agente" @agente-updated="handleAgenteUpdated" @agente-deleted="handleAgenteDeleted"></BotonEditarEliminarAgente> 
+                             <BotonEditarEliminarAgente :agente="agente"></BotonEditarEliminarAgente> 
                         </td>
                     </tr>
                 </tbody>

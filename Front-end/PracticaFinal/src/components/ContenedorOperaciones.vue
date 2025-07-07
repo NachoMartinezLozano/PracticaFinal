@@ -2,34 +2,14 @@
 
     import BotonAñadirOperacion from './BotonAñadirOperacion.vue';
     import BotonEditarEliminarOperacion from './BotonEditarEliminarOperaciones.vue'
-    import { fetchOperaciones } from '../scripts/llamadasOperacion'
-    import { ref, onMounted } from 'vue'
+    import { useOperacionesStore } from '../stores/operaciones'
+    import { onMounted } from 'vue'
 
-    const operaciones = ref([])
-    
-    const loadOperaciones = async () => {
-        try{
-            const data = await fetchOperaciones();
-            operaciones.value = data
-        }catch(err){
-            console.error('Error cargando operaciones en contenedor:', err)
-            operaciones.value = []
-        }
-    }
+    const operacionesStore = useOperacionesStore()
 
-    const handleOperacionAdded = () => {
-        loadOperaciones();
-    }
-
-    const handleOperacionUpdated = () => {
-        loadOperaciones();
-    }
-
-    const handleOperacionDeleted = () => {
-        loadOperaciones();
-    }
-
-    onMounted(loadOperaciones)
+    onMounted(() => {
+        operacionesStore.fetchOperaciones();
+    })
 
 </script>
 
@@ -38,7 +18,7 @@
     <div class="flex flex-col">
         <div class="flex flex-row justify-between">
             <h1>Gestiona todas las operaciones existentes dentro de la organización. </h1>
-            <BotonAñadirOperacion @operacion-added="handleOperacionAdded"></BotonAñadirOperacion>
+            <BotonAñadirOperacion></BotonAñadirOperacion>
         </div>
         <!-- Tabla con todas las operaciones -->
         <div >
@@ -54,14 +34,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <tr v-for="operacion in operaciones" :key="operacion.id">
+                    <tr v-for="operacion in operacionesStore.operaciones" :key="operacion.id">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.estado }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaInicio }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaFinal }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <BotonEditarEliminarOperacion :operacion="operacion" @operacion-updated="handleOperacionUpdated" @operacion-deleted="handleOperacionDeleted"></BotonEditarEliminarOperacion>
+                            <BotonEditarEliminarOperacion :operacion="operacion"></BotonEditarEliminarOperacion>
                         </td>
                     </tr>
                 </tbody>

@@ -1,14 +1,12 @@
 <script setup>
 
-    import { addEquipo, newEquipo } from '../scripts/llamadasEquipos'
-    import { ref } from 'vue'
+    import { useEquiposStore } from '../stores/equipos'
 
-    const emit = defineEmits(['equipo-added'])
+    const equiposStore = useEquiposStore()
 
     const handleAddEquipo = async () => {
-        const success = await addEquipo(newEquipo.value);
+        const success = await equiposStore.addEquipo();
         if(success){
-            emit('equipo-added');
             document.getElementById('my_modal_2').close();
         }
     }
@@ -26,7 +24,7 @@
                         <p>Nombre:</p>
                         <input
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newEquipo.nombre"
+                            v-model="equiposStore.newEquipo.nombre"
                             required
                             placeholder="P.e: Equipo A"
                         />
@@ -35,7 +33,7 @@
                         <p>Especialidad:</p>
                         <input
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newEquipo.especialidad"
+                            v-model="equiposStore.newEquipo.especialidad"
                             required
                             placeholder="P.e: IA, Ciberseguridad..."
                         />
@@ -45,7 +43,7 @@
                         <p>Operación de trabajo:</p>
                         <input
                             class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                            v-model="newEquipo.operacionId"
+                            v-model="equiposStore.newEquipo.operacionId"
                             required
                             placeholder="P.e: 1,2..."
                         />

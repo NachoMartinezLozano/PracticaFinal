@@ -1,14 +1,12 @@
 <script setup>
 
-    import { addOperacion, newOperacion } from '../scripts/llamadasOperacion.js'
-    import { ref } from 'vue'
+    import { useOperacionesStore } from '../stores/operaciones'
 
-    const emit = defineEmits(['operacion-added'])
+    const operacionesStore = useOperacionesStore()
 
     const handleAddOperacion = async () => {
-        const success = await addOperacion(newOperacion.value);
+        const success = await operacionesStore.addOperacion();
         if(success){
-            emit('operacion-added');
             document.getElementById('my_modal_1').close();
         }
     }
@@ -26,7 +24,7 @@
                                 <p>Nombre:</p>
                                 <input 
                                     class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                    v-model="newOperacion.nombre"
+                                    v-model="operacionesStore.newOperacion.nombre"
                                     required
                                     placeholder="P.e: Operación A"
                                 />
@@ -35,7 +33,7 @@
                                 <p>Fecha inicio:</p>
                                 <input 
                                     class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                    v-model="newOperacion.fechaInicio"
+                                    v-model="operacionesStore.newOperacion.fechaInicio"
                                     required
                                     placeholder="DD/MM/YYYY"
                                     pattern="\d{2}/\d{2}/\d{4}"
@@ -46,7 +44,7 @@
                                 <p>Fecha final:</p>
                                 <input 
                                     class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                    v-model="newOperacion.fechaFinal"
+                                    v-model="operacionesStore.newOperacion.fechaFinal"
                                     required
                                     placeholder="DD/MM/YYYY"
                                     pattern="\d{2}/\d{2}/\d{4}"

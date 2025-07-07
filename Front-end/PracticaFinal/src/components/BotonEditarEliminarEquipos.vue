@@ -1,6 +1,6 @@
 <script setup>
 
-    import { updateEquipo, removeEquipo } from '../scripts/llamadasEquipos'
+    import { useEquiposStore } from '../stores/equipos'
     import { ref, watch } from 'vue'
 
     const props = defineProps({
@@ -10,7 +10,7 @@
         }
     })
 
-    const emit = defineEmits(['equipo-updated', 'equipo-deleted'])
+    const equiposStore = useEquiposStore()
     const editModalEquipo = ref(null)
 
     const localEquipo = ref({
@@ -54,10 +54,9 @@
 
     const handleSaveEquipo = async () => {
         try{
-            const success = await updateEquipo(localEquipo.value)
+            const success = await equiposStore.updateEquipo(localEquipo.value)
             if(success){
-                emit('equipo-updated')
-                document.getElementById('edit_modal_equipo').close()
+                closeModal()
             }
         }catch(error){
             console.error('Error en handleSaveEquipo: ', error)
@@ -68,10 +67,9 @@
         if(!confirm('¿Estás seguro de que quieres eliminar este equipo?')) return
 
         try{
-            const success = await removeEquipo(props.equipo.id)
+            const success = await equiposStore.removeEquipo(props.equipo.id)
             if(success){
-                emit('equipo-deleted')
-                document.getElementById('edit_modal_equipo').close()
+                closeModal()
             }
         }catch(error){
             console.error('Error eliminando equipo: ', error)

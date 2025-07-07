@@ -2,34 +2,14 @@
 
     import BotonAñadirEquipos from './BotonAñadirEquipos.vue';
     import BotonEditarEliminarEquipos from './BotonEditarEliminarEquipos.vue';
-    import { fetchEquipos } from '../scripts/llamadasEquipos'
-    import { ref, onMounted } from 'vue'
+    import { useEquiposStore } from '../stores/equipos'
+    import { onMounted } from 'vue'
 
-    const equipos = ref([])
+    const equiposStore = useEquiposStore()
 
-    const loadEquipos = async () => {
-        try{
-            const data = await fetchEquipos();
-            equipos.value = data
-        }catch(err){
-            console.error('Error cargando equipos en contenedor:', err)
-            equipos.value = []
-        }
-    }
-
-    const handleEquipoAdded = () => {
-        loadEquipos();
-    }
-
-    const handleEquipoUpdated = () => {
-        loadEquipos();
-    }
-
-    const handleEquipoDeleted = () => {
-        loadEquipos();
-    }
-
-    onMounted(loadEquipos)
+    onMounted(() => {
+        equiposStore.fetchEquipos();
+    })
 
 </script>
 
@@ -38,7 +18,7 @@
     <div class="flex flex-col">
         <div class="flex flex-row justify-between">
             <h1>Gestiona todos los equipos existentes dentro de la organización. </h1>
-            <BotonAñadirEquipos @equipo-added="handleEquipoAdded"></BotonAñadirEquipos>
+            <BotonAñadirEquipos></BotonAñadirEquipos>
         </div>
         <!-- Tabla con todas las operaciones -->
         <div >
@@ -53,13 +33,13 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <tr v-for="equipo in equipos" :key="equipo.id">
+                    <tr v-for="equipo in equiposStore.equipos" :key="equipo.id">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.especialidad }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.operacionId }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <BotonEditarEliminarEquipos :equipo="equipo" @equipo-updated="handleEquipoUpdated" @equipo-deleted="handleEquipoDeleted"></BotonEditarEliminarEquipos>
+                            <BotonEditarEliminarEquipos :equipo="equipo"></BotonEditarEliminarEquipos>
                         </td>
                     </tr>
                 </tbody>
