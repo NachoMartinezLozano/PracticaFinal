@@ -85,7 +85,7 @@ export async function updateOperacion(operacion){
         nombre: operacion.nombre,
         estado: operacion.estado,
         fechaInicio: operacion.fechaInicio,
-        fechaFin: operacion.fechaFin
+        fechaFinal: operacion.fechaFinal
     }
 
     try{
@@ -98,10 +98,11 @@ export async function updateOperacion(operacion){
             },
             body: JSON.stringify(updatedOperacion)
         })
+        console.log('La petición de PUT con datos: ', JSON.stringify(updatedOperacion))
         console.log('Respuesta recibida:', response.status, response.statusText)
         if(!response.ok) throw new Error('Error al actualizar la operación')
-        editingOperacionId = null
-        editedOperacionName = ''
+        editingOperacionId.value = null
+        editedOperacionName.value = ''
     }catch(error){
         console.error('Error updating operación:', error)
     }

@@ -97,8 +97,8 @@ export async function updateEquipo(equipo){
         })
         console.log('Respuesta recibida: ', response.status, response.statusText)
         if(!response.ok) throw new Error('Error al actualziar el equipo')
-        editingEquipoId = null
-        editedEquipoName = ''
+        editingEquipoId.value = null
+        editedEquipoName.value = ''
     }catch(error){
         console.error('Error updating equipo: ', error)
     }

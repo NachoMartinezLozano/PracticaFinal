@@ -1,6 +1,7 @@
 <script setup>
 
     import BotonAñadirAgentes from './BotonAñadirAgentes.vue'
+    import BotonEditarEliminarAgente from './BotonEditarEliminarAgente.vue'
     import { fetchAgentes } from '../scripts/llamadasAgentes'
     import { ref, onMounted } from 'vue'
 
@@ -17,8 +18,16 @@
     }
 
     const handleAgenteAdded = () => {
-        loadAgentes();
+        loadAgentes(); // Recargar la lista cuando se añade un agente
     }
+
+    const handleAgenteUpdated = () => {
+    loadAgentes(); // Recargar la lista cuando se actualiza un agente
+    };
+
+    const handleAgenteDeleted = () => {
+    loadAgentes(); // Recargar la lista cuando se elimina un agente
+    };
 
     onMounted(loadAgentes)
 
@@ -41,6 +50,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Rango</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Activo</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Equipo_ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wide"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -48,8 +58,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.rango }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.activo }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.activo ? 'Si' : 'No' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ agente.equipoId }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                             <BotonEditarEliminarAgente :agente="agente" @agente-updated="handleAgenteUpdated" @agente-deleted="handleAgenteDeleted"></BotonEditarEliminarAgente> 
+                        </td>
                     </tr>
                 </tbody>
             </table>

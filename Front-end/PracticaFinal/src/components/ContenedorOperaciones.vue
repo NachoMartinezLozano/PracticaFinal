@@ -1,6 +1,7 @@
 <script setup>
 
     import BotonAñadirOperacion from './BotonAñadirOperacion.vue';
+    import BotonEditarEliminarOperacion from './BotonEditarEliminarOperaciones.vue'
     import { fetchOperaciones } from '../scripts/llamadasOperacion'
     import { ref, onMounted } from 'vue'
 
@@ -17,6 +18,14 @@
     }
 
     const handleOperacionAdded = () => {
+        loadOperaciones();
+    }
+
+    const handleOperacionUpdated = () => {
+        loadOperaciones();
+    }
+
+    const handleOperacionDeleted = () => {
         loadOperaciones();
     }
 
@@ -41,6 +50,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Estado</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Fecha Inicio</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Fecha Final</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -50,6 +60,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.estado }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaInicio }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ operacion.fechaFinal }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <BotonEditarEliminarOperacion :operacion="operacion" @operacion-updated="handleOperacionUpdated" @operacion-deleted="handleOperacionDeleted"></BotonEditarEliminarOperacion>
+                        </td>
                     </tr>
                 </tbody>
             </table>

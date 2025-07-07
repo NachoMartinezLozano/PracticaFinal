@@ -1,6 +1,7 @@
 <script setup>
 
     import BotonAñadirEquipos from './BotonAñadirEquipos.vue';
+    import BotonEditarEliminarEquipos from './BotonEditarEliminarEquipos.vue';
     import { fetchEquipos } from '../scripts/llamadasEquipos'
     import { ref, onMounted } from 'vue'
 
@@ -17,6 +18,14 @@
     }
 
     const handleEquipoAdded = () => {
+        loadEquipos();
+    }
+
+    const handleEquipoUpdated = () => {
+        loadEquipos();
+    }
+
+    const handleEquipoDeleted = () => {
         loadEquipos();
     }
 
@@ -40,6 +49,7 @@
                         <th class="px-8 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Nombre</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Especialidad</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Operacion_ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -48,6 +58,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.especialidad }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.operacionId }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <BotonEditarEliminarEquipos :equipo="equipo" @equipo-updated="handleEquipoUpdated" @equipo-deleted="handleEquipoDeleted"></BotonEditarEliminarEquipos>
+                        </td>
                     </tr>
                 </tbody>
             </table>

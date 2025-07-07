@@ -83,11 +83,14 @@ export async function removeAgente(agenteId){
 }
 
 export async function updateAgente(agente){
+
+    const activoBoolean = agente.activo.trim().toLowerCase() === 'sí' || agente.activo.trim().toLowerCase() === 'true'
+
     const updatedAgente = {
         id: agente.id,
         nombre: agente.nombre,
         rango: agente.rango,
-        activo: agente.activo,
+        activo: activoBoolean,
         equipoId: agente.equipoId
     }
 
@@ -101,10 +104,11 @@ export async function updateAgente(agente){
             },
             body: JSON.stringify(updatedAgente)
         })
+        console.log('La petición de PUT con datos: ', JSON.stringify(updatedAgente))
         console.log('Respuesta recibida: ', response.status, response.statusText)
         if(!response.ok) throw new Error('Error al actualizar el agente')
-        editingAgenteId = null
-        editedAgenteName = ''
+        editingAgenteId.value = null
+        editedAgenteName.value = ''
     }catch(error){
         console.error('Error updating agente: ', error)
     }
