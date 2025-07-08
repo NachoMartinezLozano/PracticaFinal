@@ -25,6 +25,12 @@ namespace PracticaFinalApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Agentes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Agentes_Equipos_EquipoId",
+                        column: x => x.EquipoId,
+                        principalTable: "Equipos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,6 +46,12 @@ namespace PracticaFinalApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Equipos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Equipos_Operaciones_OperacionId",
+                        column: x => x.OperacionId,
+                        principalTable: "Operaciones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,6 +69,16 @@ namespace PracticaFinalApi.Migrations
                 {
                     table.PrimaryKey("PK_Operaciones", x => x.Id);
                 });
+
+                migrationBuilder.CreateIndex(
+                name: "IX_Equipos_OperacionId",
+                table: "Equipos",
+                column: "OperacionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agentes_EquipoId",
+                table: "Agentes",
+                column: "EquipoId");
         }
 
         /// <inheritdoc />

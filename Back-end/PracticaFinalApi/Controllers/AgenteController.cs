@@ -25,6 +25,8 @@ namespace PracticaFinalApi.Controllers
         {
             return await _context.Agentes
                 //.Include(e => e.Equipo)
+                .OrderBy(x => x.Nombre)
+                .Select(x => x)
                 .ToListAsync();
         }
 
@@ -40,21 +42,14 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<AgenteItem>>> PostAgente(AgenteItem agente)
+        public async Task<ActionResult<IEnumerable<AgenteItem>>> PostAgente(AgenteItemDTO agente)
         {
             if (agente == null)
             {
                 return BadRequest();
             }
 
-            var ag = new AgenteItem
-            {
-                Nombre = agente.Nombre,
-                Rango = agente.Rango,
-                Activo = agente.Activo,
-                EquipoId = agente.EquipoId,
-                //Equipo = agente.Equipo
-            };
+            var ag = AgenteDTOToAgente(agente);
 
             _context.Agentes.Add(ag);
             await _context.SaveChangesAsync();
@@ -112,6 +107,17 @@ namespace PracticaFinalApi.Controllers
         private bool AgenteExists(int id)
         {
             return _context.Agentes.Any(a => a.Id == id);
+        }
+
+        public static AgenteItem AgenteDTOToAgente(AgenteItemDTO ag)
+        {
+            return new AgenteItem
+            {
+                Nombre = ag.Nombre,
+                Rango = ag.Rango,
+                Activo = ag.Activo,
+                EquipoId = ag.EquipoId
+            };
         }
     }
 }

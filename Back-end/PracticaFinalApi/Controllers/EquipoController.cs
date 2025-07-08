@@ -21,10 +21,10 @@ namespace PracticaFinalApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EquipoItem>>> GetEquipos()
         {
-           return await _context.Equipos
-                //.Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
-                //.Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
-                .ToListAsync();
+            return await _context.Equipos
+                 //.Include(e => e.Operacion) // Incluye la operación relacionada con el equipo
+                 .Include(e => e.Agentes) // Incluye los agentes relacionados con el equipo
+                 .ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -40,23 +40,16 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<EquipoItem>>> PostEquipo(EquipoItem equipo)
+        public async Task<ActionResult<IEnumerable<EquipoItem>>> PostEquipo(EquipoItemDTO equipo)
         {
             if (equipo == null)
             {
                 return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
             }
 
-            var newEquipo = new EquipoItem
-            {
-                Nombre = equipo.Nombre,
-                Especialidad = equipo.Especialidad,
-                OperacionId = equipo.OperacionId,
-                //Agentes = equipo.Agentes,
-                //Operacion = equipo.Operacion
-            };
+            var newEq = EquipoDTOToEquipo(equipo);
 
-            _context.Equipos.Add(newEquipo);
+            _context.Equipos.Add(newEq);
             await _context.SaveChangesAsync();
 
             return await GetEquipos();
@@ -80,8 +73,6 @@ namespace PracticaFinalApi.Controllers
             newEquipo.Nombre = equipo.Nombre;
             newEquipo.Especialidad = equipo.Especialidad;
             newEquipo.OperacionId = equipo.OperacionId;
-            //newEquipo.Operacion = equipo.Operacion;
-            //newEquipo.Agentes = equipo.Agentes;
 
             try
             {
@@ -113,6 +104,16 @@ namespace PracticaFinalApi.Controllers
         private bool EquipoExists(int id)
         {
             return _context.Equipos.Any(e => e.Id == id);
+        }
+
+        public static EquipoItem EquipoDTOToEquipo(EquipoItemDTO eq)
+        {
+            return new EquipoItem
+            {
+                Nombre = eq.Nombre,
+                Especialidad = eq.Especialidad,
+                OperacionId = eq.OperacionId
+            };
         }
     }
 }
