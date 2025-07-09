@@ -9,6 +9,7 @@
 
     onMounted(() => {
         equiposStore.fetchEquipos();
+        equiposStore.fetchOperaciones();
     })
 
 </script>
@@ -37,7 +38,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.nombre }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.especialidad }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.operacionId }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ equipo.operacionNombre || 'Sin operación' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <BotonEditarEliminarEquipos :equipo="equipo"></BotonEditarEliminarEquipos>
                         </td>

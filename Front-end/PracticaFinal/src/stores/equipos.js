@@ -2,10 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 const apiURL = 'https://localhost:7154/api/Equipo'
+const operacionApiURL = 'https://localhost:7154/api/Operacion'
 
 export const useEquiposStore = defineStore('equipos', {
   state: () => ({
     equipos: ref([]), // Lista de equipos
+    operaciones: ref([]),
     newEquipo: ref({
       nombre: '',
       especialidad: '',
@@ -14,6 +16,23 @@ export const useEquiposStore = defineStore('equipos', {
   }),
 
   actions: {
+
+    async fetchOperaciones(){
+      console.log('Enviando solicitud de GET a: ', operacionApiURL)
+      try{
+        const url = `${operacionApiURL}`
+        const response = await fetch(url)
+        console.log('Respuesta recibida: ', response.status, response.statusText)
+        if(!response.ok) throw new Error('Error al obtener las operaciones para los equipos')
+        const data = await response.json()
+        console.log('Operaciones obtenidas para los equipos: ', data)
+        this.operaciones = data
+      }catch(error){
+        console.error('Error fetching las operaciones para los equipos: ', error)
+        this.operaciones = []
+      }
+    },
+
     async fetchEquipos() {
       console.log('Enviando solicitud de GET a: ', apiURL);
       try {

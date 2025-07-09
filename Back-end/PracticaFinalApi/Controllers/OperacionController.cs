@@ -21,18 +21,48 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OperacionItem>>> GetOperaciones()
+        public async Task<ActionResult<IEnumerable<OperacionResponseDTO>>> GetOperaciones()
         {
+            try
+            {
+                var operaciones = await _context.Operaciones
+                    .Include(o => o.Equipos) // Incluye los equipos relacionados
+                    .Select(o => new OperacionResponseDTO
+                    {
+                        Id = o.Id,
+                        Nombre = o.Nombre,
+                        Estado = o.Estado,
+                        FechaInicio = o.FechaInicio,
+                        FechaFinal = o.FechaFinal,
+                        NombresEquipos = o.Equipos != null ? o.Equipos.Select(e => e.Nombre ?? string.Empty).ToList() : new List<string>()
+                    })
+                    .ToListAsync();
 
-            return await _context.Operaciones
-                //.Include(o => o.Equipos) // Incluye los equipos relacionados con la operación
-                .ToListAsync();
+                return Ok(operaciones);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetOperaciones: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OperacionItem>> GetOperacion(int id)
+        public async Task<ActionResult<OperacionResponseDTO>> GetOperacion(int id)
         {
-            var operacion = await _context.Operaciones.FindAsync(id);
+            var operacion = await _context.Operaciones
+                .Include(o => o.Equipos)
+                .Select(o => new OperacionResponseDTO
+                {
+                    Id = o.Id,
+                    Nombre = o.Nombre,
+                    Estado = o.Estado,
+                    FechaInicio = o.FechaInicio,
+                    FechaFinal = o.FechaFinal,
+                    NombresEquipos = o.Equipos != null ? o.Equipos.Select(e => e.Nombre ?? string.Empty).ToList() : new List<string>()
+                })
+                .FirstOrDefaultAsync(o => o.Id == id);
+
             if (operacion == null)
             {
                 return NotFound($"Operación con ID {id} no encontrada.");
@@ -42,7 +72,7 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<OperacionItem>>> PostOperacion(OperacionItem operacion)
+        public async Task<ActionResult<IEnumerable<OperacionResponseDTO>>> PostOperacion(OperacionItem operacion)
         {
             if (operacion == null)
             {
@@ -55,8 +85,16 @@ namespace PracticaFinalApi.Controllers
                 Estado = operacion.Estado,
                 FechaInicio = operacion.FechaInicio,
                 FechaFinal = operacion.FechaFinal,
-                //Equipos = operacion.Equipos
+                Equipos = new List<EquipoItem>()
             };
+
+            if (operacion.Equipos != null && operacion.Equipos.Any())
+            {
+                var equipos = await _context.Equipos
+                    .Where(e => operacion.Equipos.Select(eq => eq.Id).Contains(e.Id))
+                    .ToListAsync();
+                op.Equipos.AddRange(equipos);
+            }
 
             _context.Operaciones.Add(op);
             await _context.SaveChangesAsync();
@@ -65,7 +103,7 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<IEnumerable<OperacionItem>>> PutOperacion(int id, OperacionItem operacion)
+        public async Task<ActionResult<IEnumerable<OperacionResponseDTO>>> PutOperacion(int id, OperacionItem operacion)
         {
             if (id != operacion.Id)
             {

@@ -41,12 +41,15 @@
                     <div class="mb-4">
                         <!-- De momento está con el Id de la operación, cuando establezca las relaciones entre las tablas haré para que se relacione con el nombre de la Operación -->
                         <p>Operación de trabajo:</p>
-                        <input
-                            class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        <select
+                            class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-full"
                             v-model="equiposStore.newEquipo.operacionId"
-                            required
-                            placeholder="P.e: 1,2..."
-                        />
+                        >
+                            <option value="0" disabled>Selecciona una operación</option>
+                            <option v-for="operacion in equiposStore.operaciones" :key="operacion.id" :value="operacion.id">
+                                {{ operacion.nombre }}
+                            </option>
+                        </select>
                     </div>
                      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
                         Añadir equipo
