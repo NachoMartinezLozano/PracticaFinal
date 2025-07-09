@@ -24,7 +24,7 @@ namespace PracticaFinalApi.Controllers
         public async Task<ActionResult<IEnumerable<AgenteItem>>> GetAgentes()
         {
             return await _context.Agentes
-                //.Include(e => e.Equipo)
+                .Include(e => e.Equipo)
                 .OrderBy(x => x.Nombre)
                 .Select(x => x)
                 .ToListAsync();
@@ -51,6 +51,21 @@ namespace PracticaFinalApi.Controllers
 
             var ag = AgenteDTOToAgente(agente);
 
+            if (agente.EquipoId.HasValue)
+            {
+                var equipo = await _context.Equipos
+                    .Include(e => e.Agentes)
+                    .FirstOrDefaultAsync(e => e.Id == agente.EquipoId);
+                
+                if (equipo == null)
+                {
+                    return BadRequest($"Equipo con ID {agente.EquipoId} no encontrado.");
+                }
+
+                equipo.Agentes ??= new List<AgenteItem>();
+                equipo.Agentes.Add(ag);
+            }
+
             _context.Agentes.Add(ag);
             await _context.SaveChangesAsync();
 
@@ -76,7 +91,7 @@ namespace PracticaFinalApi.Controllers
             ag.Rango = agente.Rango;
             ag.Activo = agente.Activo;
             ag.EquipoId = agente.EquipoId;
-            //ag.Equipo = agente.Equipo;
+            ag.Equipo = agente.Equipo;
 
             try
             {
