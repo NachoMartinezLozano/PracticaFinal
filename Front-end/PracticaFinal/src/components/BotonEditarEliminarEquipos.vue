@@ -85,7 +85,7 @@
         <div class="modal-box">
         <h3 class="text-lg font-bold">Editar equipo</h3>
         <div class="flex flex-col">
-            <form @submit.prevent="handleSaveEquipo">
+            <form id="editar-equipo" @submit.prevent="handleSaveEquipo">
             <div class="mb-4">
                 <p>Nombre:</p>
                 <input
@@ -116,8 +116,12 @@
                     </option>
                 </select>
             </div>
-            <div class="flex flex-row gap-2">
-                <button
+
+            </form>
+        </div>
+        <div class="modal-action flex flex-row gap-2 mt-4">
+            <button
+                form="editar-equipo"
                 type="submit"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition"
                 >
@@ -130,10 +134,6 @@
                 >
                 Eliminar Equipo
                 </button>
-            </div>
-            </form>
-        </div>
-        <div class="modal-action">
             <button class="btn" @click="closeModal">Cancelar</button>
         </div>
         </div>

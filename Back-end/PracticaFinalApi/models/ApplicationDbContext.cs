@@ -12,6 +12,7 @@ namespace PracticaFinalApi.Models
         public DbSet<OperacionItem> Operaciones { get; set; } // DbSet para las operaciones
         public DbSet<EquipoItem> Equipos { get; set; } // DbSet para los equipos
         public DbSet<AgenteItem> Agentes { get; set; } // DbSet para los agentes
+        public DbSet<TokenInfo> TokenInfos { get; set; } // DbSet para los tokens de acceso
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

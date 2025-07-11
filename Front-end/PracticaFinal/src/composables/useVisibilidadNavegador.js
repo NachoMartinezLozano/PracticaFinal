@@ -1,22 +1,12 @@
 import { ref, onMounted, onUnmounted} from 'vue'
 
 export function useVisibilidadNavegador() {
-    const showNavegador = ref(window.innerWidth >= 768)
+    const showNavegador = ref(false)
 
-    const updateNavegadorVisibility = () => {
-        showNavegador.value = window.innerWidth >= 768
+    const toggleNavegador = () => {
+        showNavegador.value = !showNavegador.value
+        console.log('showNavegador: ', showNavegador.value)
     }
 
-    onMounted(() => {
-        window.addEventListener('resize', updateNavegadorVisibility)
-    })
-
-    onUnmounted(() => {
-        window.removeEventListener('resize', updateNavegadorVisibility)
-    })
-
-    return {
-        showNavegador,
-        updateNavegadorVisibility,
-    }
+    return{ showNavegador, toggleNavegador }
 }

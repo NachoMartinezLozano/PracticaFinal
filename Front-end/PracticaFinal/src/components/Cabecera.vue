@@ -1,9 +1,12 @@
 <script setup>
     import { ref, onMounted, onUnmounted } from 'vue'
     import { useRouter } from 'vue-router'
+    import { useVisibilidadNavegador } from '../composables/useVisibilidadNavegador'
 
     const router = useRouter()
     const nombreEmpresa = 'CyberPulse Labs'
+
+    const { showNavegador, toggleNavegador }  = useVisibilidadNavegador()
 
      // Variable para controlar el cambio de tema
     const theme = ref(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
@@ -39,26 +42,21 @@
         window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', handleSystemThemeChange)
     })
 
-    const showBoton = ref(window.innerWidth < 768)
-    
-    const updateBotonVisibility = () => {
-        showBoton.value = window.innerWidth < 768
-    }
-    
-    onMounted(() => {
-        window.addEventListener('resize', updateBotonVisibility)
-    })
-
-    onUnmounted(() => {
-        window.removeEventListener('resize', updateBotonVisibility)
-    })
-
 </script>
 
 <template>
 
-    <div class="navbar bg-base-100 shadow-sm flex w-full mx-auto border border-gray-600">
-        <div class="dropdown" v-if="showBoton">
+    <div class="navbar bg-base-100 flex w-full mx-auto">
+        <!--
+        <div class="flex-none">
+            <button class="btn btn-ghost btn-circle" @click="toggleNavegador" aria-label="Toggle navigation menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+            </button>
+        </div>
+        -->
+         <div class="dropdown">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /> </svg>
             </div>
@@ -71,7 +69,7 @@
             </ul>
         </div>
         <div class="flex-1 px-5">
-            <button class="btn btn-soft btn-info text-xl" @click="router.push({ path: '/'})">{{ nombreEmpresa }}</button>
+            <button class="btn btn-soft btn-info" @click="router.push({ path: '/'})">{{ nombreEmpresa }}</button>
         </div>
         <div class="flex">
             <ul class="menu menu-horizontal px-1">
@@ -106,6 +104,10 @@
 
 </template>
 
-<style>
+<style scoped>
+
+    .navbar{
+        z-index: 50;
+    }
 
 </style>

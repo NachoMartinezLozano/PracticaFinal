@@ -19,7 +19,7 @@
         <div class="modal-box">
             <h3 class="text-lg font-bold">Introduce los datos del nuevo agente:</h3>
             <div class="flex flex-col">
-                <form @submit.prevent="handleAddAgente">
+                <form id="añadir-agente" @submit.prevent="handleAddAgente">
                     <div class="mb-4">
                         <p>Nombre:</p>
                         <input 
@@ -59,12 +59,12 @@
                             placeholder="P.e: 1,2..."
                         />
                     </div>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
-                        Añadir agente
-                    </button>
                 </form>
             </div>
-            <div class="modal-action">
+            <div class="modal-action flex flex-row gap-2 mt-4">
+                <button form="añadir-agente" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
+                    Añadir agente
+                </button>
                 <form method="dialog">
                     <button class="btn">Cancelar</button>
                 </form>

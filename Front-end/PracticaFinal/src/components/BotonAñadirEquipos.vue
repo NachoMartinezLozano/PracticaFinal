@@ -19,7 +19,7 @@
         <div class="modal-box">
             <h3 class="text-lg font-bold">Introduce los datos del nuevo equipo:</h3>
             <div class="flex flex-col">
-                <form @submit.prevent="handleAddEquipo">
+                <form id="añadir-equipo" @submit.prevent="handleAddEquipo">
                     <div class="mb-4">
                         <p>Nombre:</p>
                         <input
@@ -51,12 +51,12 @@
                             </option>
                         </select>
                     </div>
-                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
-                        Añadir equipo
-                    </button>
                 </form>
             </div>
-            <div class="modal-action">
+            <div class="modal-action flex flex-row justify-end gap-2 mt-4">
+                   <button form="añadir-equipo" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
+                        Añadir equipo
+                    </button>
                 <form method="dialog">
                     <button class="btn">Cancelar</button>
                 </form>
