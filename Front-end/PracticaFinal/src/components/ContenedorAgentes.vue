@@ -4,8 +4,10 @@
     import BotonEditarEliminarAgente from './BotonEditarEliminarAgente.vue'
     import { useAgentesStore } from '../stores/agentes'
     import { onMounted } from 'vue'
+    import { useAuthStore } from '../stores/auth'
 
     const agentesStore = useAgentesStore()
+    const authStore = useAuthStore()
 
     onMounted(() => {
         agentesStore.fetchAgentes();
@@ -24,7 +26,7 @@
 
         <div class="flex flex-row justify-between pt-4">
             <h1 class="px-4">Tus Agentes: </h1>
-            <div class="px-4">
+            <div v-if="authStore.user" class="px-4">
                 <BotonAñadirAgentes></BotonAñadirAgentes>
             </div>
         </div>
@@ -48,7 +50,7 @@
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ agente.rango }}</td>
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ agente.activo ? 'Si' : 'No' }}</td>
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ agente.equipoNombre || 'Sin equipo' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-gray-200">
+                        <td v-if="authStore.user" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-gray-200">
                              <BotonEditarEliminarAgente :agente="agente"></BotonEditarEliminarAgente> 
                         </td>
                     </tr>

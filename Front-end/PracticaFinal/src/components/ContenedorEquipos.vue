@@ -4,8 +4,10 @@
     import BotonEditarEliminarEquipos from './BotonEditarEliminarEquipos.vue';
     import { useEquiposStore } from '../stores/equipos'
     import { onMounted } from 'vue'
+    import { useAuthStore } from '../stores/auth'
 
     const equiposStore = useEquiposStore()
+    const authStore = useAuthStore()
 
     onMounted(() => {
         equiposStore.fetchEquipos();
@@ -25,7 +27,7 @@
 
         <div class="flex flex-row justify-between pt-4">
             <h1 class="font-bold px-4">Tus equipos: </h1>
-            <div class="px-4">
+            <div v-if="authStore.user" class="px-4">
                 <BotonAñadirEquipos></BotonAñadirEquipos>
             </div>
             
@@ -48,7 +50,7 @@
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ equipo.nombre }}</td>
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ equipo.especialidad }}</td>
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ equipo.operacionNombre || 'Sin operación' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-gray-200">
+                        <td v-if="authStore.user" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-gray-200">
                             <BotonEditarEliminarEquipos :equipo="equipo"></BotonEditarEliminarEquipos>
                         </td>
                     </tr>

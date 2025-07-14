@@ -4,8 +4,10 @@
     import BotonEditarEliminarOperacion from './BotonEditarEliminarOperaciones.vue'
     import { useOperacionesStore } from '../stores/operaciones'
     import { onMounted } from 'vue'
+    import { useAuthStore } from '../stores/auth'
 
     const operacionesStore = useOperacionesStore()
+    const authStore = useAuthStore()
 
     onMounted(() => {
         operacionesStore.fetchOperaciones();
@@ -24,7 +26,7 @@
 
         <div class="flex flex-row justify-between pt-4">
             <h2 class="font-bold px-4">Tus Operaciones:</h2>
-            <div class="px-4">
+            <div v-if="authStore.user" class="px-4">
                 <BotonAñadirOperacion></BotonAñadirOperacion>
             </div>
         </div>
@@ -48,7 +50,7 @@
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ operacion.estado }}</td>
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ operacion.fechaInicio }}</td>
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-900 bg-gray-200">{{ operacion.fechaFinal }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-gray-200">
+                        <td v-if="authStore.user" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-gray-200">
                             <BotonEditarEliminarOperacion :operacion="operacion"></BotonEditarEliminarOperacion>
                         </td>
                     </tr>
