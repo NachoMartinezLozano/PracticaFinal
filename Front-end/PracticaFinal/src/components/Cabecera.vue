@@ -2,9 +2,11 @@
     import { ref, onMounted, onUnmounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useVisibilidadNavegador } from '../composables/useVisibilidadNavegador'
+    import { useAuthStore } from '../stores/auth'
 
     const router = useRouter()
     const nombreEmpresa = 'CyberPulse Labs'
+    const authStore = useAuthStore()
 
     const { showNavegador, toggleNavegador }  = useVisibilidadNavegador()
 
@@ -73,7 +75,11 @@
         </div>
         <div class="flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a>Sobre nosotros</a></li>
+                <li>
+                    <span v-if="authStore.user" class="text-sm font-medium mr-4">
+                        Bienvenido/a, {{ authStore.user.username }}
+                    </span>
+                </li>
                 <li>
                     <label class="swap swap-rotate">
                     <!-- this hidden checkbox controls the state -->

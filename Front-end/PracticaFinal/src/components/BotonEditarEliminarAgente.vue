@@ -1,7 +1,8 @@
 <script setup>
 
     import { useAgentesStore } from '../stores/agentes'
-    import { ref, watch } from 'vue'
+    import { useEquiposStore } from '../stores/equipos'
+    import { ref, watch, onMounted } from 'vue'
 
     const props = defineProps({
         agente: {
@@ -11,6 +12,7 @@
     })
 
     const agentesStore = useAgentesStore()
+    const equiposStore = useEquiposStore()
     const editModal = ref(null)
 
     const localAgente = ref({
@@ -41,6 +43,11 @@
             };
         }
     }, { immediate: true })
+
+    onMounted(async () => {
+        await equiposStore.fetchEquipos() // Asegurarse de que los equipos estén cargados
+        console.log('Equipos cargados:', equiposStore.equipos) // Depurar
+    })
 
     const openModal = () => {
         console.log('editModal:', editModal.value) // Depurar
@@ -121,13 +128,16 @@
             </select>
           </div>
           <div class="mb-4">
-            <p>Equipo ID:</p>
-            <input
-              class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              v-model="localAgente.equipoId"
-              required
-              placeholder="P.e: 1, 2..."
-            />
+            <p>Equipo:</p>
+            <select
+                    class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-full"
+                    v-model="localAgente.equipoId"
+                >
+                    <option value="0" disabled>Selecciona un equipo:</option>
+                    <option v-for="equipo in equiposStore.equipos" :key="equipo.id" :value="equipo.id">
+                        {{ equipo.nombre }}
+                    </option>
+                </select>
           </div>
 
         </form>

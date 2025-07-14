@@ -21,28 +21,59 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AgenteItem>>> GetAgentes()
+        public async Task<ActionResult<IEnumerable<AgenteResponseDTO>>> GetAgentes()
         {
-            return await _context.Agentes
-                .Include(e => e.Equipo)
-                .OrderBy(x => x.Nombre)
-                .Select(x => x)
+            try
+            {
+                var agente = await _context.Agentes
+                .Include(a => a.Equipo)
+                .Select(a => new AgenteResponseDTO
+                {
+                    Id = a.Id,
+                    Nombre = a.Nombre,
+                    Rango = a.Rango,
+                    Activo = a.Activo,
+                    EquipoId = a.EquipoId,
+                    EquipoNombre = a.Equipo != null ? a.Equipo.Nombre : null
+                })
                 .ToListAsync();
+
+                return Ok(agente);
+            } catch (Exception ex)
+            {
+                // Log the exception for debugging
+                Console.WriteLine($"Error in GetAgentes: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+            
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AgenteItem>> GetAgente(int id)
+        public async Task<ActionResult<AgenteResponseDTO>> GetAgente(int id)
         {
-            var agente = await _context.Agentes.FindAsync(id);
+            var agente = await _context.Agentes.
+                Include(a => a.Equipo)
+                .Select(a => new AgenteResponseDTO
+                {
+                    Id = a.Id,
+                    Nombre = a.Nombre,
+                    Rango = a.Rango,
+                    Activo = a.Activo,
+                    EquipoId = a.EquipoId,
+                    EquipoNombre = (a.Equipo != null && a.Id == id) ? a.Equipo.Nombre : null
+                })
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (agente == null)
             {
-                return NotFound();
+                return NotFound($"Agente con ID {id} no encontrado.");
             }
+            
             return agente;
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<AgenteItem>>> PostAgente(AgenteItemDTO agente)
+        public async Task<ActionResult<IEnumerable<AgenteResponseDTO>>> PostAgente(AgenteItemDTO agente)
         {
             if (agente == null)
             {
@@ -73,7 +104,7 @@ namespace PracticaFinalApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<IEnumerable<AgenteItem>>> PutAgente(int id, AgenteItem agente)
+        public async Task<ActionResult<IEnumerable<AgenteResponseDTO>>> PutAgente(int id, AgenteItem agente)
         {
             if (id != agente.Id)
             {

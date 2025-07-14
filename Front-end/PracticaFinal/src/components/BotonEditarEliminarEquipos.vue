@@ -108,7 +108,7 @@
                 <p>Operación:</p>
                 <select
                     class="px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-full"
-                    v-model="equiposStore.newEquipo.operacionId"
+                    v-model="localEquipo.operacionId"
                 >
                     <option value="0" disabled>Selecciona una operación</option>
                     <option v-for="operacion in equiposStore.operaciones" :key="operacion.id" :value="operacion.id">

@@ -1,4 +1,6 @@
 <script setup>
+import TarjetaLogin from './TarjetaLogin.vue';
+
 
 </script>
 
@@ -10,12 +12,8 @@
             Si quieres que tu empresa empiece a trabajar de forma eficiente, somos tu solución.
         </p>
 
-        <h2 class="font-bold my-4">Regístrate</h2>
-
-        <!-- Aquí dentro irán los campos para poder introducir las credenciales de los usuarios cuando tenga hecho el JWT -->
-
-        <h3 class="font-bold mb-4">Testimonios</h3>
-
+        <TarjetaLogin></TarjetaLogin>
+        <!--
         <ul class="list bg-base-100 rounded-box shadow-md mb-6">
   
             <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Reseñas de clientes</li>
@@ -55,7 +53,7 @@
             </li>
             
         </ul>
-
+        -->
         <footer class="footer sm:footer-horizontal bg-base-100 text-neutral-content items-center p-4">
             <aside class="grid-flow-col items-center">
                 <svg
